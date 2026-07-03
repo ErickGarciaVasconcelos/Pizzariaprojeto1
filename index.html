@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bella Pizza - A melhor pizza da cidade. Peça agora!">
+    <title>Bella Pizza - Pizzaria Artesanal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="cardapio.js" defer></script>
+  </head>
+<body>
+
+  <!-- ========== HERO BANNER ========== -->
+  <section class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <h1 class="hero__title">Bella Pizza</h1>
+      <p class="hero__tagline">A verdadeira pizza artesanal<br>no forno a lenha</p>
+    </div>
+  </section>
+
+  <!-- ========== CARROSSEL DE CATEGORIAS (PÍLULAS) ========== -->
+  <nav class="category-carousel" id="categoryCarousel">
+    <div class="category-carousel__track">
+      <button class="category-pill category-pill--active" data-category="pizzas">
+        <span class="category-pill__emoji">🍕</span>
+        <span class="category-pill__text">Pizzas</span>
+      </button>
+      <button class="category-pill" data-category="bebidas">
+        <span class="category-pill__emoji">🥤</span>
+        <span class="category-pill__text">Bebidas</span>
+      </button>
+      <button class="category-pill" data-category="sobremesas">
+        <span class="category-pill__emoji">🍰</span>
+        <span class="category-pill__text">Sobremesas</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+  <main class="main" id="mainContent">
+
+    <!-- Seção: PIZZAS -->
+    <section class="menu-section" id="pizzas" data-section="pizzas">
+      <h2 class="menu-section__title">Nossas Pizzas</h2>
+      <div class="cards-container" id="cardsPizzas"></div>
+      <div class="pagination" id="paginationPizzas"></div>
+    </section>
+
+    <!-- Seção: BEBIDAS -->
+    <section class="menu-section" id="bebidas" data-section="bebidas" hidden>
+      <h2 class="menu-section__title">Bebidas</h2>
+      <div class="cards-container" id="cardsBebidas"></div>
+      <div class="pagination" id="paginationBebidas"></div>
+    </section>
+
+    <!-- Seção: SOBREMESAS -->
+    <section class="menu-section" id="sobremesas" data-section="sobremesas" hidden>
+      <h2 class="menu-section__title">Sobremesas</h2>
+      <div class="cards-container" id="cardsSobremesas"></div>
+      <div class="pagination" id="paginationDoces"></div>
+    </section>
+
+  </main>
+
+  <!-- ========== BOTTOM NAVIGATION BAR ========== -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bottom-nav__item bottom-nav__item--active" data-nav="cardapio">
+      <span class="bottom-nav__icon">📋</span>
+      <span class="bottom-nav__label">Cardápio</span>
+    </button>
+    <button class="bottom-nav__item" data-nav="buscar">
+      <span class="bottom-nav__icon">🔍</span>
+      <span class="bottom-nav__label">Buscar</span>
+    </button>
+    <button class="bottom-nav__item bottom-nav__item--cart" data-nav="carrinho" id="openCartBtn">
+      <span class="bottom-nav__icon">🛒</span>
+      <span class="bottom-nav__label">Carrinho</span>
+      <span class="bottom-nav__badge" id="cartBadge">0</span>
+    </button>
+  </nav>
+
+  <!-- ========== BARRA FIXA DO CARRINHO (FLUTUANTE) ========== -->
+  <div class="cart-floating" id="cartFloating" style="display: none;">
+    <button class="cart-floating__btn" id="openCartBtnFloat">
+      <span class="cart-floating__icon">🛒</span>
+      <span class="cart-floating__info">
+        <span class="cart-floating__count"><span id="cartCount">0</span> item(ns)</span>
+        <span class="cart-floating__total" id="cartTotal">R$ 0,00</span>
+      </span>
+      <span class="cart-floating__action">Ver Carrinho →</span>
+    </button>
+  </div>
+
+  <!-- ========== MODAL: PIZZA MEIO A MEIO ========== -->
+  <div class="modal" id="modalMeioMeio" aria-hidden="true">
+    <div class="modal__overlay" data-close-modal="modalMeioMeio"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="modal__title">🍕 Monte sua Pizza Meio a Meio</h2>
+        <button class="modal__close" data-close-modal="modalMeioMeio" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="modal__body">
+        <!-- Passo 1: Sabor 1 -->
+        <div class="half-pizza__section">
+          <h3 class="half-pizza__label">Metade 1</h3>
+          <div class="half-pizza__options" id="sabor1Options">
+          </div>
+        </div>
+
+        <!-- Passo 2: Sabor 2 -->
+        <div class="half-pizza__section">
+          <h3 class="half-pizza__label">Metade 2</h3>
+          <div class="half-pizza__options" id="sabor2Options">
+          </div>
+        </div>
+
+        <!-- Resumo do preço -->
+        <div class="half-pizza__summary" id="meioMeioSummary">
+          <p class="half-pizza__summary-text">Selecione os dois sabores para ver o preço</p>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="modal__btn modal__btn--cancel" data-close-modal="modalMeioMeio">Cancelar</button>
+        <button class="modal__btn modal__btn--confirm" id="confirmMeioMeio" disabled>Adicionar ao Carrinho</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== BOTTOM SHEET: CARRINHO ========== -->
+  <div class="bottom-sheet" id="modalCarrinho" aria-hidden="true">
+    <div class="bottom-sheet__overlay" data-close-modal="modalCarrinho"></div>
+    <div class="bottom-sheet__sheet" id="cartSheet">
+      <!-- Puxador -->
+      <div class="bottom-sheet__handle" id="cartHandle">
+        <span class="bottom-sheet__handle-bar"></span>
+      </div>
+
+      <!-- Header -->
+      <div class="bottom-sheet__header">
+        <h2 class="bottom-sheet__title">Seu Carrinho</h2>
+        <button class="bottom-sheet__close" data-close-modal="modalCarrinho" aria-label="Fechar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Corpo rolável -->
+      <div class="bottom-sheet__body" id="cartItemsContainer">
+        <!-- Carrinho vazio -->
+        <div class="cart-empty" id="cartEmpty">
+          <div class="cart-empty__icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <p class="cart-empty__text">Seu carrinho está vazio</p>
+          <p class="cart-empty__subtext">Adicione itens do cardápio para começar</p>
+        </div>
+
+        <!-- ========== FORMULÁRIO DE DADOS (original, clonado depois) ========== -->
+        <form class="checkout-form" id="checkoutForm" style="display: none;">
+          <h3 class="checkout-form__section-title">Seus Dados</h3>
+
+          <!-- Nome -->
+          <div class="form-group">
+            <label class="form-label" for="clientName">Nome *</label>
+            <input class="form-input" type="text" id="clientName" name="clientName" placeholder="Seu nome completo" required autocomplete="name">
+          </div>
+
+          <!-- Telefone -->
+          <div class="form-group">
+            <label class="form-label" for="clientPhone">Telefone *</label>
+            <input class="form-input" type="tel" id="clientPhone" name="clientPhone" placeholder="(11) 99999-9999" required autocomplete="tel">
+          </div>
+
+          <!-- Forma de Entrega -->
+          <div class="form-group">
+            <label class="form-label">Forma de Entrega *</label>
+            <div class="delivery-options">
+              <button type="button" class="delivery-option delivery-option--active" data-delivery="entrega" id="optEntrega">
+                <span class="delivery-option__icon">🚗</span>
+                <span class="delivery-option__text">Entrega</span>
+              </button>
+              <button type="button" class="delivery-option" data-delivery="retirada" id="optRetirada">
+                <span class="delivery-option__icon">🏃</span>
+                <span class="delivery-option__text">Retirada</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Campos de Endereço -->
+          <div class="address-fields" id="addressFields">
+            <h3 class="checkout-form__section-title">Endereço de Entrega</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="clientAddress">Endereço (Rua/Av.) *</label>
+              <input class="form-input" type="text" id="clientAddress" name="clientAddress" placeholder="Rua, Avenida, etc.">
+            </div>
+
+            <div class="form-group form-group--row">
+              <div class="form-group form-group--half">
+                <label class="form-label" for="clientNumber">Número *</label>
+                <input class="form-input" type="text" id="clientNumber" name="clientNumber" placeholder="Nº">
+              </div>
+              <div class="form-group form-group--half">
+                <label class="form-label" for="clientNeighborhood">Bairro *</label>
+                <select class="form-select" id="clientNeighborhood" name="clientNeighborhood">
+                  <option value="">Selecione</option>
+                  <option value="centro">Centro</option>
+                  <option value="norte">Bairro Norte</option>
+                  <option value="sul">Bairro Sul</option>
+                  <option value="leste">Bairro Leste</option>
+                  <option value="oeste">Bairro Oeste</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="clientReference">Ponto de Referência</label>
+              <input class="form-input" type="text" id="clientReference" name="clientReference" placeholder="Em frente ao mercado, etc.">
+            </div>
+
+            <div class="delivery-fee" id="deliveryFeeDisplay" style="display: none;">
+              <span class="delivery-fee__label">Taxa de Entrega:</span>
+              <span class="delivery-fee__value" id="deliveryFeeValue">R$ 0,00</span>
+            </div>
+          </div>
+
+          <!-- Forma de Pagamento -->
+          <div class="form-group">
+            <label class="form-label">Forma de Pagamento *</label>
+            <div class="payment-options">
+              <button type="button" class="payment-option" data-payment="cartao" id="optCartao">
+                <span class="payment-option__icon">💳</span>
+                <span class="payment-option__text">Cartão</span>
+              </button>
+              <button type="button" class="payment-option" data-payment="pix" id="optPix">
+                <span class="payment-option__icon">📱</span>
+                <span class="payment-option__text">Pix</span>
+              </button>
+              <button type="button" class="payment-option" data-payment="dinheiro" id="optDinheiro">
+                <span class="payment-option__icon">💵</span>
+                <span class="payment-option__text">Dinheiro</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Troco -->
+          <div class="change-field" id="changeField" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="needChange">Precisa de troco?</label>
+              <div class="change-options">
+                <button type="button" class="change-option" data-change="sim" id="optTrocoSim">Sim</button>
+                <button type="button" class="change-option change-option--active" data-change="nao" id="optTrocoNao">Não</button>
+              </div>
+            </div>
+            <div class="form-group" id="changeAmountGroup" style="display: none;">
+              <label class="form-label" for="changeAmount">Troco para quanto?</label>
+              <input class="form-input" type="text" id="changeAmount" name="changeAmount" placeholder="Ex: R$ 50,00">
+            </div>
+          </div>
+
+          <!-- Observações -->
+          <div class="form-group">
+            <label class="form-label" for="clientObs">Observações</label>
+            <textarea class="form-textarea" id="clientObs" name="clientObs" placeholder="Sem cebola, borda recheada, etc." rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer fixo -->
+      <div class="bottom-sheet__footer" id="cartFooter" style="display: none;">
+        <div class="cart-summary">
+          <div class="cart-summary__row">
+            <span>Subtotal</span>
+            <span id="subtotalValue">R$ 0,00</span>
+          </div>
+          <div class="cart-summary__row cart-summary__row--fee" id="feeRow" style="display: none;">
+            <span>Taxa de Entrega</span>
+            <span id="deliveryFeeFooter">R$ 0,00</span>
+          </div>
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Total</span>
+            <span id="cartModalTotal">R$ 0,00</span>
+          </div>
+        </div>
+        <button class="cart-checkout-btn" id="checkoutBtn" disabled>
+          <span>Enviar Pedido via WhatsApp</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: BUSCA ========== -->
+  <div class="modal" id="modalBusca" aria-hidden="true">
+    <div class="modal__overlay" data-close-modal="modalBusca"></div>
+    <div class="modal__content modal__content--search">
+      <div class="modal__header">
+        <h2 class="modal__title">🔍 Buscar no Cardápio</h2>
+        <button class="modal__close" data-close-modal="modalBusca" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="modal__body modal__body--search">
+        <!-- Campo de busca -->
+        <div class="search-input-wrapper">
+          <input class="search-input" type="text" id="searchInput" placeholder="Buscar por nome ou ingrediente..." autocomplete="off">
+          <button class="search-clear-btn" id="searchClearBtn" aria-label="Limpar busca" style="display: none;">✕</button>
+        </div>
+
+        <!-- Filtros de categoria -->
+        <div class="search-filters">
+          <button class="search-filter-pill search-filter-pill--active" data-search-filter="todos">Todos</button>
+          <button class="search-filter-pill" data-search-filter="pizzas">🍕 Pizzas</button>
+          <button class="search-filter-pill" data-search-filter="doces">🍰 Doces</button>
+          <button class="search-filter-pill" data-search-filter="bebidas">🥤 Bebidas</button>
+        </div>
+
+        <!-- Resultados -->
+        <div class="search-results" id="searchResults">
+          <div class="search-empty" id="searchEmpty">
+            <p class="search-empty__icon">🔍</p>
+            <p class="search-empty__text">Digite para buscar</p>
+            <p class="search-empty__subtext">Busque por nome ou ingrediente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script src="app.js"></script>
+
+</body>
+</html>
