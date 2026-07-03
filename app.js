@@ -195,16 +195,9 @@
       }
     });
 
-    // Atualiza bottom nav
-    elements.bottomNavItems.forEach(item => {
-      item.classList.remove('bottom-nav__item--active');
-      if (item.dataset.nav === 'cardapio') {
-        item.classList.add('bottom-nav__item--active');
-      }
-    });
-  }
+    }
 
-  // Event listeners para pills do carrossel
+    // Event listeners para pills do carrossel
   elements.categoryPills.forEach(pill => {
     pill.addEventListener('click', () => {
       switchCategory(pill.dataset.category);
@@ -220,10 +213,7 @@
       elements.bottomNavItems.forEach(i => i.classList.remove('bottom-nav__item--active'));
       item.classList.add('bottom-nav__item--active');
       
-      if (navType === 'cardapio') {
-        // Volta ao topo e mostra cardápio
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (navType === 'buscar') {
+      if (navType === 'buscar') {
         // Abre modal de busca
         openModal('modalBusca');
         var si = document.getElementById('searchInput');
