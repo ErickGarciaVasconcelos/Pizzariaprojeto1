@@ -1501,6 +1501,10 @@
     // Inicializa swipe-to-close no bottom sheet do carrinho
     initBottomSheetSwipe();
 
+    // Inicializa hamburger menu e modais
+    initHamburgerMenu();
+    initModals();
+
     // Re-renderiza ao mudar tamanho da tela (mobile <-> desktop)
     let resizeTimer;
     window.addEventListener('resize', function() {
@@ -1555,6 +1559,71 @@
         
         setTimeout(() => ripple.remove(), 600);
       });
+    });
+  }
+
+  // ============================================
+  // HAMBURGER MENU & MODAIS
+  // ============================================
+
+  function initHamburgerMenu() {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const menuItems = document.querySelectorAll('.hamburger-menu__item');
+
+    if (!hamburgerBtn || !hamburgerMenu) return;
+
+    // Toggle menu
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hamburgerBtn.classList.toggle('hamburger-btn--active');
+      hamburgerMenu.classList.toggle('hamburger-menu--active');
+    });
+
+    // Close menu on outside click
+    document.addEventListener('click', () => {
+      hamburgerBtn.classList.remove('hamburger-btn--active');
+      hamburgerMenu.classList.remove('hamburger-menu--active');
+    });
+
+    // Open modal on menu item click
+    menuItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const page = item.getAttribute('data-page');
+        const modalId = page === 'sobre' ? 'modalSobre' : 'modalContato';
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add('modal--active');
+          document.body.style.overflow = 'hidden';
+        }
+        // Close hamburger menu
+        hamburgerBtn.classList.remove('hamburger-btn--active');
+        hamburgerMenu.classList.remove('hamburger-menu--active');
+      });
+    });
+  }
+
+  function initModals() {
+    // Close modal on overlay or close button click
+    document.querySelectorAll('[data-close-modal]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const modalId = el.getAttribute('data-close-modal');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.remove('modal--active');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal--active').forEach((modal) => {
+          modal.classList.remove('modal--active');
+          document.body.style.overflow = '';
+        });
+      }
     });
   }
 
