@@ -319,20 +319,28 @@
     const product = getProductById(productId);
     if (!product && !options.isMeioMeio) return;
 
-    let itemName, itemPrice, itemFlavor;
+    let itemName, itemPrice, itemFlavor, itemTamanho;
 
     if (options.isMeioMeio) {
       const sabor1 = getProductById(options.sabor1);
       const sabor2 = getProductById(options.sabor2);
       if (!sabor1 || !sabor2) return;
 
-      itemPrice = Math.max(sabor1.price, sabor2.price);
+      itemPrice = Math.max(sabor1.preco, sabor2.preco);
       itemName = 'Pizza Meio a Meio';
-      itemFlavor = `${sabor1.name.split(' ').pop()} / ${sabor2.name.split(' ').pop()}`;
-    } else {
-      itemPrice = product.price;
-      itemName = product.name;
+      itemFlavor = `${sabor1.nome.split(' ').pop()} / ${sabor2.nome.split(' ').pop()}`;
+      itemTamanho = null;
+    } else if (options.tamanho) {
+      // Tamanho selecionado via popup (Grande ou Broto)
+      itemPrice = options.price;
+      itemName = product.nome;
       itemFlavor = null;
+      itemTamanho = options.tamanho;
+    } else {
+      itemPrice = product.preco;
+      itemName = product.nome;
+      itemFlavor = null;
+      itemTamanho = null;
     }
 
     const existingItem = state.cart.find(item => {
@@ -341,7 +349,9 @@
                item.sabor1 === options.sabor1 &&
                item.sabor2 === options.sabor2;
       }
-      return item.productId === productId && !item.isMeioMeio;
+      return item.productId === productId &&
+             !item.isMeioMeio &&
+             item.tamanho === (itemTamanho || null);
     });
 
     if (existingItem) {
@@ -356,7 +366,8 @@
         quantity: 1,
         isMeioMeio: options.isMeioMeio || false,
         sabor1: options.sabor1 || null,
-        sabor2: options.sabor2 || null
+        sabor2: options.sabor2 || null,
+        tamanho: itemTamanho
       });
     }
 
@@ -480,10 +491,15 @@
       ? `<span class="cart-item__flavor">${item.flavor}</span>`
       : '';
 
+    const tamanhoHtml = item.tamanho
+      ? `<span class="cart-item__flavor">${item.tamanho}</span>`
+      : '';
+
     div.innerHTML = `
       <div class="cart-item__info">
         <p class="cart-item__name">${item.name}</p>
         ${flavorHtml}
+        ${tamanhoHtml}
         <span class="cart-item__price">${formatCurrency(item.price * item.quantity)}</span>
       </div>
       <div class="cart-item__controls">
@@ -533,12 +549,47 @@
 
   // Event listeners para botões de adicionar
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.card__btn-add:not(.card__btn-add--meioameio)');
+    // Botão "Adicionar" de pizza com opção broto — abre popup
+    const btnComBroto = e.target.closest('.card__btn-add--com-broto');
+    if (btnComBroto) {
+      e.stopPropagation();
+      const productId = btnComBroto.dataset.product;
+      const popup = document.querySelector(`.size-popup[data-popup-for="${productId}"]`);
+      if (popup) {
+        // Fecha outros popups abertos
+        document.querySelectorAll('.size-popup--visible').forEach(p => p.classList.remove('size-popup--visible'));
+        popup.classList.toggle('size-popup--visible');
+      }
+      return;
+    }
+
+    // Opção de tamanho selecionada no popup
+    const sizeOption = e.target.closest('.size-popup__option');
+    if (sizeOption) {
+      e.stopPropagation();
+      const productId = sizeOption.dataset.product;
+      const tamanho = sizeOption.dataset.tamanho;
+      const price = parseFloat(sizeOption.dataset.price);
+      addToCart(productId, { tamanho, price });
+      // Fecha o popup
+      sizeOption.closest('.size-popup').classList.remove('size-popup--visible');
+      return;
+    }
+
+    // Botão normal "Adicionar" (sem broto)
+    const btn = e.target.closest('.card__btn-add:not(.card__btn-add--meioameio):not(.card__btn-add--com-broto)');
     if (!btn) return;
 
     e.stopPropagation();
     const productId = btn.dataset.product;
     addToCart(productId);
+  });
+
+  // Fecha popup de tamanho ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.card__btn-add--com-broto') && !e.target.closest('.size-popup')) {
+      document.querySelectorAll('.size-popup--visible').forEach(p => p.classList.remove('size-popup--visible'));
+    }
   });
 
   // Abrir modal do carrinho (botão flutuante)
@@ -799,11 +850,11 @@
 
     if (!pizza1 || !pizza2) return;
 
-    const finalPrice = Math.max(pizza1.price, pizza2.price);
+    const finalPrice = Math.max(pizza1.preco, pizza2.preco);
 
     elements.meioMeioSummary.innerHTML = `
       <p class="half-pizza__summary-text">
-        ${pizza1.name.replace('Pizza ', '')} / ${pizza2.name.replace('Pizza ', '')}
+        ${pizza1.nome.replace('Pizza ', '')} / ${pizza2.nome.replace('Pizza ', '')}
       </p>
       <p class="half-pizza__summary-price">${formatCurrency(finalPrice)}</p>
       <p class="half-pizza__summary-rule">* Preço cobrado pelo sabor de maior valor</p>
@@ -853,6 +904,11 @@
   function formatCartItemsForWhatsApp() {
     return state.cart.map((item, index) => {
       let itemText = `${index + 1}. *${item.name}*`;
+      
+      // Adiciona tamanho se tiver (Grande/Broto)
+      if (item.tamanho) {
+        itemText += ` (${item.tamanho})`;
+      }
       
       // Adiciona sabores se for meio a meio
       if (item.isMeioMeio && item.flavor) {
@@ -1056,14 +1112,22 @@
     const imgContainerClass = isBebida ? 'card__image-container card__image-container--small' : 'card__image-container';
 
     let buttonsHtml = '';
-    if (item.precoBroto) {
+    if (item.precoBroto && item.categoria === 'pizzas') {
       buttonsHtml = `
-        <button class="card__btn-add" data-product="${item.id}" data-price="${item.preco}" data-tamanho="Grande">
-          Grande ${formatCurrency(item.preco)}
+        <button class="card__btn-add card__btn-add--com-broto" data-product="${item.id}">
+          Adicionar
         </button>
-        <button class="card__btn-add card__btn-add--broto" data-product="${item.id}" data-price="${item.precoBroto}" data-tamanho="Broto">
-          Broto ${formatCurrency(item.precoBroto)}
-        </button>
+        <div class="size-popup" data-popup-for="${item.id}">
+          <span class="size-popup__title">Escolha o tamanho</span>
+          <button class="size-popup__option" data-product="${item.id}" data-tamanho="Grande" data-price="${item.preco}">
+            <span class="size-popup__label">Grande</span>
+            <span class="size-popup__price">${formatCurrency(item.preco)}</span>
+          </button>
+          <button class="size-popup__option size-popup__option--broto" data-product="${item.id}" data-tamanho="Broto" data-price="${item.precoBroto}">
+            <span class="size-popup__label">Broto</span>
+            <span class="size-popup__price">${formatCurrency(item.precoBroto)}</span>
+          </button>
+        </div>
       `;
     } else {
       buttonsHtml = `
@@ -1166,7 +1230,7 @@
       container.insertAdjacentHTML('beforeend', createCardHTML(item));
     });
 
-    container.querySelectorAll('.card__btn-add').forEach(btn => {
+    container.querySelectorAll('.card__btn-add:not(.card__btn-add--com-broto):not(.card__btn-add--meioameio)').forEach(btn => {
       btn.addEventListener('click', handleAddToCart);
     });
 
