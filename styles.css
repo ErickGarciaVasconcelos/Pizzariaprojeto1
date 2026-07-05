@@ -2116,19 +2116,6 @@ button {
   padding: 0 var(--space-sm);
 }
 
-.pagination__ellipsis {
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--color-text-light);
-  letter-spacing: 0.1em;
-  pointer-events: none;
-}
-
 @media (min-width: 768px) {
   .pagination {
     display: flex;
