@@ -2118,6 +2118,20 @@ button {
 }
 
 /* ============================================
+   RESPONSIVIDADE - BANNER MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .hero__slide:nth-child(1) {
+    background-image: url('img/Imagem celular 1.jpg') !important;
+  }
+
+  .hero__slide:nth-child(2) {
+    background-image: url('img/Imagem celular 2.jpg') !important;
+  }
+}
+
+/* ============================================
    UTILITÁRIOS & Acessibilidade
    ============================================ */
 
