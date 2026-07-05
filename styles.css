@@ -193,13 +193,13 @@ button {
 .category-pill {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 10px var(--space-lg);
-  min-height: 42px;
+  gap: 6px;
+  padding: 6px var(--space-md);
+  min-height: 34px;
   background-color: var(--color-bg);
   border: 2px solid transparent;
   border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--color-text);
   white-space: nowrap;
@@ -222,12 +222,12 @@ button {
 }
 
 .category-pill__emoji {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   line-height: 1;
 }
 
 .category-pill__text {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   letter-spacing: 0.02em;
 }
 
