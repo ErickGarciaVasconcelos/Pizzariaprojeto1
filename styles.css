@@ -334,9 +334,14 @@ button {
 
 /* Container para cards dinâmicos */
 .cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+/* Bebidas usam 1 coluna no mobile pois cards são horizontais */
+#cardsBebidas {
+  grid-template-columns: 1fr;
 }
 
 /* Preços no card */
