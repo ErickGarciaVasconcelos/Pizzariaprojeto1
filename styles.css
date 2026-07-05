@@ -109,22 +109,32 @@ button {
 
 .hero__slide {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 0.8s ease;
+  z-index: 1;
 }
 
 .hero__slide--active {
   opacity: 1;
+  z-index: 2;
 }
 
 .hero__overlay {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: transparent;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .hero__content {

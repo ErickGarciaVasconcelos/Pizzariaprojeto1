@@ -1689,11 +1689,13 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      initHeroCarousel();
+    });
   } else {
     init();
+    initHeroCarousel();
   }
-
-  initHeroCarousel();
 
 })();
