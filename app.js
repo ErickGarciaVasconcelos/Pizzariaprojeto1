@@ -1164,13 +1164,42 @@
     }
 
     paginationEl.classList.add('pagination--visible');
+    const isMobile = window.innerWidth < 768;
 
     let html = '';
-
     html += `<button class="pagination__btn" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
 
-    for (let i = 1; i <= totalPages; i++) {
-      html += `<button class="pagination__btn ${i === currentPage ? 'pagination__btn--active' : ''}" data-page="${i}">${i}</button>`;
+    if (isMobile && totalPages > 4) {
+      // Mobile: janela deslizante de 3 páginas + ... + última
+      let start = Math.max(2, currentPage - 1);
+      let end = Math.min(totalPages - 1, currentPage + 1);
+
+      // Sempre mostra página 1
+      html += `<button class="pagination__btn ${1 === currentPage ? 'pagination__btn--active' : ''}" data-page="1">1</button>`;
+
+      // Ellipsis esquerdo
+      if (start > 2) {
+        html += `<span class="pagination__ellipsis">...</span>`;
+      }
+
+      // Páginas do meio
+      for (let i = start; i <= end; i++) {
+        html += `<button class="pagination__btn ${i === currentPage ? 'pagination__btn--active' : ''}" data-page="${i}">${i}</button>`;
+      }
+
+      // Ellipsis direito
+      if (end < totalPages - 1) {
+        html += `<span class="pagination__ellipsis">...</span>`;
+      }
+
+      // Sempre mostra última página
+      html += `<button class="pagination__btn ${totalPages === currentPage ? 'pagination__btn--active' : ''}" data-page="${totalPages}">${totalPages}</button>`;
+
+    } else {
+      // Desktop ou poucas páginas: mostra todas
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="pagination__btn ${i === currentPage ? 'pagination__btn--active' : ''}" data-page="${i}">${i}</button>`;
+      }
     }
 
     html += `<button class="pagination__btn" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
