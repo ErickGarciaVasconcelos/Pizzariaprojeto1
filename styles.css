@@ -57,7 +57,7 @@
   --touch-min: 48px;
 
   /* Layout */
-  --hero-height: 240px;
+  --hero-height: 300px;
   --categories-height: 56px;
   --bottom-nav-height: 65px;
   --max-width: 480px;
@@ -1980,7 +1980,7 @@ button {
 @media (min-width: 768px) {
   :root {
     --max-width: 720px;
-    --hero-height: 320px;
+    --hero-height: 400px;
   }
 
   .hero__title {
