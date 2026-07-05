@@ -104,11 +104,21 @@ button {
 .hero {
   position: relative;
   height: var(--hero-height);
-  background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&h=600&fit=crop');
+  overflow: hidden;
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.hero__slide--active {
+  opacity: 1;
 }
 
 .hero__overlay {
@@ -154,6 +164,67 @@ button {
   letter-spacing: 1px;
   max-width: 300px;
   line-height: 1.5;
+}
+
+/* Botões de navegação do carrossel */
+.hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero__arrow:active {
+  transform: translateY(-50%) scale(0.9);
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.hero__arrow--prev {
+  left: 12px;
+}
+
+.hero__arrow--next {
+  right: 12px;
+}
+
+/* Indicadores (dots) */
+.hero__dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}
+
+.hero__dot {
+  width: 10px;
+  height: 10px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.hero__dot--active {
+  background-color: white;
+  transform: scale(1.2);
 }
 
 /* ============================================

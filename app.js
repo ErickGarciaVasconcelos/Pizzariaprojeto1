@@ -1618,10 +1618,82 @@
     });
   }
 
+  // ============================================
+  // CARROSSEL DO HERO/BANNER
+  // ============================================
+
+  function initHeroCarousel() {
+    const carousel = document.getElementById('heroCarousel');
+    const slides = carousel?.querySelectorAll('.hero__slide');
+    const dots = carousel?.querySelectorAll('.hero__dot');
+    const prevBtn = document.getElementById('heroPrev');
+    const nextBtn = document.getElementById('heroNext');
+
+    if (!carousel || !slides || slides.length === 0) return;
+
+    let currentSlide = 0;
+    let autoPlayInterval = null;
+    const AUTOPLAY_DELAY = 4000;
+
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('hero__slide--active');
+      dots[currentSlide]?.classList.remove('hero__dot--active');
+
+      currentSlide = (index + slides.length) % slides.length;
+
+      slides[currentSlide].classList.add('hero__slide--active');
+      dots[currentSlide]?.classList.add('hero__dot--active');
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayInterval = setInterval(nextSlide, AUTOPLAY_DELAY);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+    }
+
+    nextBtn?.addEventListener('click', () => {
+      nextSlide();
+      startAutoPlay();
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      prevSlide();
+      startAutoPlay();
+    });
+
+    dots?.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+        startAutoPlay();
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+
+    startAutoPlay();
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
+
+  initHeroCarousel();
 
 })();
