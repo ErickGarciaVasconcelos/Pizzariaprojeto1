@@ -1093,9 +1093,9 @@
   const ITEMS_PER_PAGE = 16;
   const ITEMS_PER_PAGE_MOBILE = 6;
   const paginationState = {
-    pizzas: { page: 2, totalPages: 1 },
-    bebidas: { page: 2, totalPages: 1 },
-    doces: { page: 2, totalPages: 1 }
+    pizzas: { page: 1, totalPages: 1 },
+    bebidas: { page: 1, totalPages: 1 },
+    doces: { page: 1, totalPages: 1 }
   };
 
   function createCardHTML(item) {
@@ -1220,13 +1220,6 @@
 
     pageItems.forEach((item, index) => {
       container.insertAdjacentHTML('beforeend', createCardHTML(item));
-    });
-
-    // Aplica animação fadeInUp nos cards recém-criados
-    container.querySelectorAll('.card').forEach((card, index) => {
-      card.style.opacity = '0';
-      card.style.animation = `fadeInUp 0.4s ease forwards`;
-      card.style.animationDelay = `${index * 0.08}s`;
     });
 
     container.querySelectorAll('.card__btn-add:not(.card__btn-add--com-broto):not(.card__btn-add--meioameio)').forEach(btn => {
@@ -1505,15 +1498,17 @@
     initModals();
 
     // Re-renderiza ao mudar tamanho da tela (mobile <-> desktop)
-    let resizeTimer;
+    let lastWidth = window.innerWidth;
     window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
+      const currentWidth = window.innerWidth;
+      const crossedBreakpoint = (lastWidth < 768 && currentWidth >= 768) || (lastWidth >= 768 && currentWidth < 768);
+      lastWidth = currentWidth;
+      if (crossedBreakpoint) {
         var activeCat = state.activeCategory;
         var catMap = { 'pizzas': 'pizzas', 'bebidas': 'bebidas', 'sobremesas': 'doces' };
         var cat = catMap[activeCat] || 'pizzas';
         renderizarCardapio(cat);
-      }, 250);
+      }
     });
 
     // Adiciona feedback visual nos botões (efeito de clique)
