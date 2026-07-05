@@ -258,6 +258,7 @@
     if (e.key === 'Escape') {
       closeModal('modalMeioMeio');
       closeModal('modalCarrinho');
+      closeModal('modalBusca');
     }
   });
 

@@ -302,16 +302,25 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: BUSCA ========== -->
-  <div class="modal" id="modalBusca" aria-hidden="true">
-    <div class="modal__overlay" data-close-modal="modalBusca"></div>
-    <div class="modal__content modal__content--search">
-      <div class="modal__header">
-        <h2 class="modal__title">🔍 Buscar no Cardápio</h2>
-        <button class="modal__close" data-close-modal="modalBusca" aria-label="Fechar">×</button>
+  <!-- ========== BOTTOM SHEET: BUSCA ========== -->
+  <div class="bottom-sheet" id="modalBusca" aria-hidden="true">
+    <div class="bottom-sheet__overlay" data-close-modal="modalBusca"></div>
+    <div class="bottom-sheet__sheet">
+      <!-- Puxador -->
+      <div class="bottom-sheet__handle">
+        <span class="bottom-sheet__handle-bar"></span>
       </div>
 
-      <div class="modal__body modal__body--search">
+      <!-- Header -->
+      <div class="bottom-sheet__header">
+        <h2 class="bottom-sheet__title">🔍 Buscar no Cardápio</h2>
+        <button class="bottom-sheet__close" data-close-modal="modalBusca" aria-label="Fechar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Corpo rolável -->
+      <div class="bottom-sheet__body">
         <!-- Campo de busca -->
         <div class="search-input-wrapper">
           <input class="search-input" type="text" id="searchInput" placeholder="Buscar por nome ou ingrediente..." autocomplete="off">

@@ -1590,23 +1590,10 @@ button {
 }
 
 /* ============================================
-   MODAL BUSCA
+   BUSCA - BOTTOM SHEET (herda estilos do carrinho)
    ============================================ */
 
-.modal__content--search {
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal__content--search .modal__body--search {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
+/* Busca usa a mesma estrutura do bottom-sheet do carrinho */
 
 /* Campo de busca */
 .search-input-wrapper {
@@ -1772,60 +1759,61 @@ button {
 }
 
 .search-result-card__name {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.search-result-card__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.3;
-}
-
-.search-result-card__desc {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-light);
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.4;
 }
 
 .search-result-card__category {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-accent);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .search-result-card__prices {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .search-result-card__price {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-primary);
+  white-space: nowrap;
 }
 
 .search-result-card__price--broto {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-light);
+  white-space: nowrap;
 }
 
 /* Botão de adicionar no resultado */
 .search-result-card__add {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1847,9 +1835,10 @@ button {
 .search-result-card__add--broto {
   width: auto;
   height: auto;
-  min-width: 40px;
+  min-width: 44px;
   border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
   padding: var(--space-xs) var(--space-sm);
 }
 
@@ -1859,6 +1848,58 @@ button {
   font-weight: 600;
   color: var(--color-text-light);
   padding: var(--space-xs) 0;
+}
+
+/* ============================================
+   RESPONSIVIDADE - BUSCA MOBILE
+   ============================================ */
+
+@media (max-width: 480px) {
+  .search-result-card {
+    padding: var(--space-sm);
+    gap: var(--space-sm);
+  }
+
+  .search-result-card__image {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+  }
+
+  .search-result-card__name {
+    font-size: var(--font-size-base);
+    line-height: 1.3;
+  }
+
+  .search-result-card__desc {
+    font-size: var(--font-size-xs);
+    -webkit-line-clamp: 2;
+  }
+
+  .search-result-card__prices {
+    gap: 2px;
+  }
+
+  .search-result-card__price {
+    font-size: var(--font-size-sm);
+  }
+
+  .search-result-card__price--broto {
+    font-size: var(--font-size-xs);
+  }
+
+  .search-result-card__add {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: var(--font-size-lg);
+  }
+
+  .search-result-card__add--broto {
+    min-width: 40px;
+    font-size: var(--font-size-xs);
+    padding: 4px 8px;
+  }
 }
 
 /* ============================================
