@@ -1091,6 +1091,7 @@
   // ============================================
 
   const ITEMS_PER_PAGE = 16;
+  const ITEMS_PER_PAGE_MOBILE = 6;
   const paginationState = {
     pizzas: { page: 1, totalPages: 1 },
     bebidas: { page: 1, totalPages: 1 },
@@ -1205,7 +1206,7 @@
 
     const itens = cardapio.filter(item => item.categoria === categoria);
     const isDesktop = window.innerWidth >= 768;
-    const perPage = isDesktop ? ITEMS_PER_PAGE : itens.length;
+    const perPage = isDesktop ? ITEMS_PER_PAGE : ITEMS_PER_PAGE_MOBILE;
     const totalPages = Math.ceil(itens.length / perPage);
 
     paginationState[categoria].totalPages = totalPages;
@@ -1215,7 +1216,7 @@
 
     const currentPage = paginationState[categoria].page;
     const startIndex = (currentPage - 1) * perPage;
-    const pageItems = isDesktop ? itens.slice(startIndex, startIndex + perPage) : itens;
+    const pageItems = itens.slice(startIndex, startIndex + perPage);
 
     pageItems.forEach(item => {
       container.insertAdjacentHTML('beforeend', createCardHTML(item));
