@@ -2185,7 +2185,7 @@ button {
 }
 
 .card {
-  animation: fadeInUp 0.4s ease forwards;
+  opacity: 1;
 }
 
 .card:nth-child(2) { animation-delay: 0.1s; }

@@ -1093,9 +1093,9 @@
   const ITEMS_PER_PAGE = 16;
   const ITEMS_PER_PAGE_MOBILE = 6;
   const paginationState = {
-    pizzas: { page: 1, totalPages: 1 },
-    bebidas: { page: 1, totalPages: 1 },
-    doces: { page: 1, totalPages: 1 }
+    pizzas: { page: 2, totalPages: 1 },
+    bebidas: { page: 2, totalPages: 1 },
+    doces: { page: 2, totalPages: 1 }
   };
 
   function createCardHTML(item) {
@@ -1132,7 +1132,7 @@
     return `
       <article class="${cardClass}">
         <div class="${imgContainerClass}">
-          <img src="${item.imagem}" alt="${item.nome}" class="card__image" loading="lazy">
+          <img src="${item.imagem}" alt="${item.nome}" class="card__image">
         </div>
         <div class="card__body">
           <h3 class="card__title">${item.nome}</h3>
@@ -1218,8 +1218,15 @@
     const startIndex = (currentPage - 1) * perPage;
     const pageItems = itens.slice(startIndex, startIndex + perPage);
 
-    pageItems.forEach(item => {
+    pageItems.forEach((item, index) => {
       container.insertAdjacentHTML('beforeend', createCardHTML(item));
+    });
+
+    // Aplica animação fadeInUp nos cards recém-criados
+    container.querySelectorAll('.card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.animation = `fadeInUp 0.4s ease forwards`;
+      card.style.animationDelay = `${index * 0.08}s`;
     });
 
     container.querySelectorAll('.card__btn-add:not(.card__btn-add--com-broto):not(.card__btn-add--meioameio)').forEach(btn => {
@@ -1358,7 +1365,7 @@
     }
 
     div.innerHTML = `
-      <img src="${item.imagem}" alt="${item.nome}" class="search-result-card__image" loading="lazy">
+      <img src="${item.imagem}" alt="${item.nome}" class="search-result-card__image">
       <div class="search-result-card__info">
         <p class="search-result-card__name">${item.nome}</p>
         <p class="search-result-card__desc">${item.descricao}</p>
