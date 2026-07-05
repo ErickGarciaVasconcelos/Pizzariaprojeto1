@@ -491,10 +491,10 @@ button {
 }
 
 .card--horizontal .card__image-container--small {
-  width: 120px;
-  min-width: 120px;
-  height: auto;
-  min-height: 120px;
+  width: 100px;
+  min-width: 100px;
+  height: 100%;
+  min-height: 100px;
 }
 
 .card--horizontal .card__body {
@@ -1943,6 +1943,11 @@ button {
     gap: var(--space-md);
   }
 
+  /* Bebidas usam 2 colunas pois cards são horizontais */
+  #cardsBebidas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .menu-section__title {
     grid-column: 1 / -1;
   }
@@ -1967,6 +1972,11 @@ button {
   /* Grid de cards em 4 colunas */
   .cards-container {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Bebidas usam 2 colunas pois cards são horizontais */
+  #cardsBebidas {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
